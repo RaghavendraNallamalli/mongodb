@@ -1,9 +1,10 @@
-mongodb.js
 show dbs
+
+Insert Documents
+
 use mongo_practice
 db.createCollection("movies")
-db.movies.insertMany(
-    [
+db.movies.insertMany([
     {
         title : "Fight Club",
         writer : "Chuck Palahniuko",
@@ -52,115 +53,118 @@ db.movies.insertMany(
         title : "Avatar"
     }
 
-]
-)
+])
+
+
+Query / Find Documents
+
 
 db.movies.find()
+
 db.movies.find({writer: 'Quentin Tarantino'})
+
 db.movies.find({actors: 'Brad Pitt' })
+
 db.movies.find({franchise: 'The Hobbit'})
+
 db.movies.find({year: {$lt :2000} })
+
 db.movies.find( { $or: [ { year: { $lt: 2000 } }, {  year: { $gt: 2010 } } ] } )
+
+
+Update Documents
 
 db.movies.update( { title: "The Hobbit: An Unexpected Journey" }, { $set: { synopsis: "A reluctant hobbit, Bilbo Baggins, sets out to the Lonely Mountain with a spirited group of dwarves to reclaim their mountain home - and the gold within it - from the dragon Smaug." } } )
 db.movies.find( { title: "The Hobbit: An Unexpected Journey" })
+
 db.movies.update({title: "The Hobbit: The Desolation of Smaug"}, {$set: {synopsis:"The dwarves, along with Bilbo Baggins and Gandalf the Grey, continue their quest to reclaim Erebor, their homeland, from Smaug. Bilbo Baggins is in possession of a mysterious and magical ring."}})
 db.movies.update({title: "Pulp Fiction" }, {$addToSet: {actors: 'Samuel L. jackson' }})
 
-//text search
+
+Text Search
+
 db.movies.createIndex({synopsis:"text"})
+
 db.movies.find({$text: {$search: "Bilbo"}})
+
 db.movies.find({$text: {$search: "Gandalf"}})
+
 db.movies.find({$text: {$search: "Bilbo -Gandalf"}})
+
 db.movies.find({$text: {$search: "dwarves hobbit"}})
 
-https://www.geeksforgeeks.org/search-text-in-mongodb/
 db.movies.find({$text:{$search:"\"gold dragon\""}})
+
+
+Delete Documents
 
 db.movies.deleteOne({title:"Pee Wee Herman's Big Adventure"})
 db.movies.deleteOne({title:"Avatar"})
 
+
+Relationships
+
 db.createCollection("users")
-db.users.insertMany([{
-    username : "GoodGuyGreg", 
-    first_name : "Good Guy",
-    last_name : "Greg"
-},
-{
-    username : "ScumbagSteve",
-    first_name : "Scumbag",
-    last_name : "Steve"
-}
-]
-)
+db.dummy.insertMany([{ username : "GoodGuyGreg", first_name : "Good Guy", last_name : "Greg"},
+{username : "ScumbagSteve", first_name : "Scumbag", last_name : "Steve"}])
 
 db.createCollection("posts")
-db.posts.insertMany(
-    [
-        {
-    username : "GoodGuyGreg",
-    title : "Passes out at party",
-    body : "Wakes up early and cleans house"
-},
-{
-    username : "GoodGuyGreg",
-    title : "Steals your identity",
-    body : "Raises your cresit score"
-},
-{
-    username : "GoodGuyGreg",
-    title : "Reports a bug in your code",
-    body : "Sends you a Pull Request"
-},
-{
-    username : "ScumbagSteve",
-    title : "Borrows something",
-    body : "Sells it"
-},
-{
-    username : "ScumbagSteve",
-    title : "Borrows everything",
-    body : " The end"
-},
-{
-    username : "ScumbagSteve",
-    title : "Forks your repo on github",
-    body : "Sets to private"
-}])
+db.posts.insertMany([{ username : "GoodGuyGreg", title : "Passes out at party",body : "Wakes up early and cleans house"},
+{ username : "GoodGuyGreg", title : "Steals your identity", body : "Raises your cresit score"},
+{ username : "GoodGuyGreg", title : "Reports a bug in your code", body : "Sends you a Pull Request"},
+{ username : "ScumbagSteve", title : "Borrows something", body : "Sells it"},
+{ username : "ScumbagSteve", title : "Borrows everything", body : " The end"},
+{ username : "ScumbagSteve", title : "Forks your repo on github", body : "Sets to private"}])
 
-   '0': ObjectId("6202ae744056de6680dc9425"),
-    '1': ObjectId("6202ae744056de6680dc9426"),
-    '2': ObjectId("6202ae744056de6680dc9427"),
-    '3': ObjectId("6202ae744056de6680dc9428"),
-    '4': ObjectId("6202ae744056de6680dc9429"),
-    '5':
+    '0': ObjectId("6203f996af6eaea44c0ba669"),
+    '1': ObjectId("6203f996af6eaea44c0ba66a"),
+    '2': ObjectId("6203f996af6eaea44c0ba66b"),
+    '3': ObjectId("6203f996af6eaea44c0ba66c"),
+    '4': ObjectId("6203f996af6eaea44c0ba66d"),
+    '5': ObjectId("6203f996af6eaea44c0ba66e")
 
 db.comments.insertMany([{
     username : "GoodGuyGreg",
     Comment : "Hope you got a good deal!",
-    post :  ObjectId("6202ae744056de6680dc9427")
+    post :  ObjectId("6203f996af6eaea44c0ba66c")
 },
 {
     username : "GoodGuyGreg",
     Comment : "What's mine is yours !",
-    post :  ObjectId("6202ae744056de6680dc9428")
+    post :  ObjectId("6203f996af6eaea44c0ba66d")
 },
 {
     username : "GoodGuyGreg",
     Comment : "Don't vioalte the licesing agreement!",
-    post :  ObjectId("6202ae744056de6680dc942a")
+    post :  ObjectId("6203f996af6eaea44c0ba66e")
 },
 {
     username : "ScumbagSteve",
      comment : "It still isn't clean", 
-     post : ObjectId("6202ae744056de6680dc9425")
-}
-])
+     post : ObjectId("6203f996af6eaea44c0ba669")
+},
+{
+     username : "ScumbagSteve",
+      comment : "It still isn't clean",
+      post : ObjectId("6203f996af6eaea44c0ba66b")
+}])
+
+
+Querying related collections
+
+
 db.users.find()
+
 db.posts.find()
+
 db.posts.find({username:"GoodGuyGreg"})
+
 db.posts.find({username:"ScumbagSteve"})
+
 db.comments.find()
+
 db.comments.find({username:"GoodGuyGreg"})
+
 db.comments.find({username:"ScumbagSteve"})
-db.comments.find({post:ObjectId("6202ae744056de6680dc9427")})
+
+db.comments.find({post:ObjectId("6203f996af6eaea44c0ba66b")})
